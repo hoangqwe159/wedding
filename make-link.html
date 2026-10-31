@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Tạo link thiệp mời</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <style>
+    :root { --gold: #C9A227; --ink: #2F2A22; --line: rgba(201,162,39,.45); }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Cormorant Garamond", serif; font-size: 18px; color: var(--ink); background: #FBF6E9; }
+    main { max-width: 560px; margin: 0 auto; padding: 32px 18px 60px; }
+    h1 { font-family: "Great Vibes", cursive; font-weight: 400; font-size: 46px; color: #9A7432; text-align: center; margin: 0 0 4px; }
+    p.lead { text-align: center; margin: 0 0 24px; color: #5E5546; }
+    label { display: block; font-weight: 600; margin: 16px 0 6px; color: #9A7432; letter-spacing: .04em; }
+    input, select, textarea { width: 100%; padding: 12px; font: inherit; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+    textarea { min-height: 150px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    button { font: inherit; font-weight: 600; padding: 10px 16px; border-radius: 999px; border: 0; color: #fff; cursor: pointer;
+      background: linear-gradient(135deg, #B88E25, #D9B851 50%, #B48A22); }
+    button.line { background: #fff; color: #9A7432; border: 1px solid var(--line); }
+    .out { margin-top: 22px; display: grid; gap: 10px; }
+    .item { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+    .item b { display: block; }
+    .item code { display: block; font-size: 13px; word-break: break-all; color: #5E5546; margin: 4px 0 8px; }
+    .item .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 8px; }
+    .tabs button[aria-pressed="false"] { background: #fff; color: #9A7432; border: 1px solid var(--line); }
+    .hint { font-size: 15px; color: #5E5546; font-style: italic; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Tạo link thiệp mời</h1>
+  <p class="lead">Nhập tên khách mời để tạo đường link riêng.</p>
+
+  <div class="tabs">
+    <button type="button" id="tabOne" aria-pressed="true">Một khách</button>
+    <button type="button" id="tabMany" aria-pressed="false">Nhiều khách</button>
+  </div>
+
+  <div id="one">
+    <label for="name">Tên hiển thị (sau "Trân trọng kính mời")</label>
+    <input id="name" placeholder="VD: Hai em Ánh Mai &amp; các cháu" />
+  </div>
+  <div id="many" hidden>
+    <label for="names">Mỗi dòng một khách mời</label>
+    <textarea id="names" placeholder="Anh Minh &amp; chị Lan&#10;Bạn Tuấn&#10;Gia đình chú Hùng"></textarea>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="ev">Sự kiện</label>
+      <select id="ev"><option value="">Tất cả sự kiện</option></select>
+    </div>
+    <div>
+      <label for="lang">Ngôn ngữ</label>
+      <select id="lang"><option value="">Tiếng Việt</option><option value="en">English</option></select>
+    </div>
+  </div>
+
+  <div class="out" id="out"></div>
+  <p class="hint">Mẹo: bấm "Chia sẻ" trên điện thoại để gửi thẳng qua Zalo / Messenger.</p>
+</main>
+
+<script src="js/config.js"></script>
+<script>
+  (function () {
+    var base = location.href.replace(/make-link\.html.*$/, "");
+    var ev = document.getElementById("ev");
+    window.WEDDING.events.forEach(function (e) {
+      var o = document.createElement("option");
+      o.value = e.id; o.textContent = e.city.vi + " (?e=" + e.id + ")";
+      ev.appendChild(o);
+    });
+
+    var mode = "one";
+    function link(name) {
+      var q = new URLSearchParams();
+      if (name) q.set("to", name);
+      if (ev.value) q.set("e", ev.value);
+      if (document.getElementById("lang").value) q.set("lang", "en");
+      var s = q.toString();
+      return base + (s ? "?" + s : "");
+    }
+    function render() {
+      var names = mode === "one"
+        ? [document.getElementById("name").value.trim()]
+        : document.getElementById("names").value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+      var out = document.getElementById("out");
+      out.innerHTML = "";
+      names.forEach(function (n) {
+        var url = link(n);
+        var d = document.createElement("div"); d.className = "item";
+        var b = document.createElement("b"); b.textContent = n || "(Khách chung — không có tên)";
+        var c = document.createElement("code"); c.textContent = url;
+        var acts = document.createElement("div"); acts.className = "acts";
+        var copy = document.createElement("button"); copy.type = "button"; copy.textContent = "Sao chép";
+        copy.onclick = function () {
+          (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () {
+            copy.textContent = "Đã chép ✓"; setTimeout(function () { copy.textContent = "Sao chép"; }, 1500);
+          }, function () { prompt("Sao chép link:", url); });
+        };
+        acts.appendChild(copy);
+        if (navigator.share) {
+          var sh = document.createElement("button"); sh.type = "button"; sh.className = "line"; sh.textContent = "Chia sẻ";
+          sh.onclick = function () { navigator.share({ title: "Thiệp mời cưới", url: url }).catch(function () {}); };
+          acts.appendChild(sh);
+        }
+        var open = document.createElement("button"); open.type = "button"; open.className = "line"; open.textContent = "Xem thử";
+        open.onclick = function () { window.open(url, "_blank"); };
+        acts.appendChild(open);
+        d.appendChild(b); d.appendChild(c); d.appendChild(acts);
+        out.appendChild(d);
+      });
+    }
+    function setMode(m) {
+      mode = m;
+      document.getElementById("one").hidden = m !== "one";
+      document.getElementById("many").hidden = m !== "many";
+      document.getElementById("tabOne").setAttribute("aria-pressed", m === "one");
+      document.getElementById("tabMany").setAttribute("aria-pressed", m === "many");
+      render();
+    }
+    document.getElementById("tabOne").onclick = function () { setMode("one"); };
+    document.getElementById("tabMany").onclick = function () { setMode("many"); };
+    ["name", "names", "ev", "lang"].forEach(function (id) {
+      document.getElementById(id).addEventListener("input", render);
+    });
+    render();
+  })();
+</script>
+</body>
+</html>

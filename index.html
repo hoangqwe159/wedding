@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#FBF6E9" />
+  <title>Thiệp cưới · Việt Hoàng & Tuyết Nhi</title>
+  <meta name="description" content="Trân trọng kính mời bạn tới dự lễ thành hôn của Việt Hoàng & Tuyết Nhi · 12.12.2026" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Việt Hoàng & Tuyết Nhi · 12.12.2026" />
+  <meta property="og:description" content="Trân trọng kính mời bạn tới dự lễ thành hôn của chúng tôi 💛" />
+  <!-- After adding a photo, set an absolute URL, e.g. https://<user>.github.io/<repo>/assets/photos/og.jpg -->
+  <!-- <meta property="og:image" content="" /> -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+SC:wght@500;600;700&family=Great+Vibes&display=swap&subset=vietnamese" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="is-locked">
+
+  <!-- Language toggle -->
+  <button class="lang-toggle" id="langToggle" type="button" aria-label="Đổi ngôn ngữ / Change language">
+    <span data-lang="vi">VI</span><i></i><span data-lang="en">EN</span>
+  </button>
+
+  <!-- ============ INTRO: THE LETTER ============ -->
+  <section class="intro" id="intro" aria-label="Thiệp mời">
+    <div class="intro__pattern" aria-hidden="true"></div>
+
+    <div class="intro__head">
+      <p class="intro__kicker" data-i18n="introKicker"></p>
+      <h1 class="intro__names script gold-text" id="introNames"></h1>
+      <p class="intro__date" id="introDate"></p>
+    </div>
+
+    <div class="envelope" id="envelope">
+      <div class="envelope__back"></div>
+      <div class="envelope__letter">
+        <div class="mini-card">
+          <p class="mini-card__k" data-i18n="saveTheDate"></p>
+          <p class="mini-card__n script gold-text" id="miniNames"></p>
+          <p class="mini-card__d" id="miniDate"></p>
+        </div>
+      </div>
+      <div class="envelope__front">
+        <div class="envelope__to">
+          <span class="envelope__to-label" data-i18n="toLabel"></span>
+          <span class="envelope__to-name script" id="envGuest"></span>
+        </div>
+      </div>
+      <div class="envelope__flap"></div>
+      <button class="seal" id="seal" type="button" aria-label="Mở thiệp">
+        <span class="seal__ring"></span>
+        <span class="seal__mono script" id="sealMono"></span>
+      </button>
+    </div>
+
+    <div class="intro__cta">
+      <button class="btn btn--gold btn--pulse" id="openBtn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l9 6 9-6M4 6h16a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <span data-i18n="openBtn"></span>
+      </button>
+      <p class="intro__hint" data-i18n="soundHint"></p>
+    </div>
+  </section>
+
+  <!-- ============ MAIN INVITATION ============ -->
+  <main class="page" id="app" aria-live="polite"></main>
+
+  <!-- Music control -->
+  <button class="music" id="musicBtn" type="button" aria-label="Nhạc nền" hidden>
+    <span class="music__disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.5" cy="16" r="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+    <span class="music__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+  <audio id="bgm" loop preload="metadata" playsinline></audio>
+
+  <!-- Gold dust & petals -->
+  <canvas class="dust" id="dust" aria-hidden="true"></canvas>
+  <div class="petals" id="petals" aria-hidden="true"></div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lightbox__close" type="button" aria-label="Close">×</button>
+    <button class="lightbox__nav lightbox__nav--prev" type="button" aria-label="Previous">‹</button>
+    <img alt="" />
+    <button class="lightbox__nav lightbox__nav--next" type="button" aria-label="Next">›</button>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
