@@ -14,16 +14,14 @@
     vi: {
       docTitle: "Thiệp cưới",
       introKicker: "Thiệp mời cưới",
-      saveTheDate: "Save the date",
+      saveTheDate: "Báo hỷ",
       toLabel: "Thân gửi",
       openBtn: "Mở thiệp",
       soundHint: "Bật âm thanh để trải nghiệm trọn vẹn ♪",
       heroKicker: "Lễ thành hôn",
-      heroKickerB: "Lễ vu quy",
       scroll: "Cuộn xuống",
       inviteLabel: "Trân trọng kính mời",
       inviteText: "Tới dự bữa cơm thân mật mừng lễ thành hôn cùng gia đình chúng tôi",
-      inviteTextB: "Tới dự bữa cơm thân mật mừng lễ vu quy cùng gia đình chúng tôi",
       groomSide: "Nhà trai",
       brideSide: "Nhà gái",
       mr: "Ông",
@@ -41,6 +39,9 @@
       welcome: "Rất hân hạnh được đón tiếp!",
       weekShort: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
       galleryTitle: "Khoảnh khắc",
+      galleryKicker: "Ảnh cưới",
+      galleryLead: "Những khoảnh khắc đẹp nhất trên hành trình của cô dâu và chú rể",
+      photoSoon: "Ảnh sắp ra mắt",
       rsvpTitle: "Xác nhận tham dự",
       rsvpLead: "Sự hiện diện của bạn là niềm vinh hạnh của chúng tôi",
       fName: "Họ tên",
@@ -98,6 +99,9 @@
       welcome: "We can't wait to celebrate with you!",
       weekShort: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
       galleryTitle: "Our Moments",
+      galleryKicker: "Our album",
+      galleryLead: "Treasured moments from the journey of the bride and groom",
+      photoSoon: "Coming soon",
       rsvpTitle: "Kindly Reply",
       rsvpLead: "Your presence would be our greatest honour",
       fName: "Your name",
@@ -344,7 +348,7 @@
       '<p class="invite__label rv">' + esc(t("inviteLabel")) + "</p>" +
       '<p class="invite__guest script rv rv--write" style="--d:2">' + esc(guestName()) + "</p>" +
       '<p class="invite__text rv" style="--d:3">' + esc(t("inviteText")) + "</p>" +
-      '<p class="invite__couple script gold-text rv rv--zoom" style="--d:4">' + esc(N1) + " &amp; " + esc(N2) + "</p>" +
+      '<p class="invite__couple script gold-text rv rv--zoom" style="--d:4">' + "<span>" + esc(N1) + '</span><span class="invite__amp">&amp;</span><span>' + esc(N2) + "</span></p>" +
       orn() +
       '<div class="families">' + fam(t(R1 + "Side"), f[R1], 1) + fam(t(R2 + "Side"), f[R2], 2) + "</div>" +
       "</div></section>";
@@ -415,14 +419,32 @@
       "</section>";
   }
 
+  var GALLERY_SLOTS = 6;
+  var ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+  function galleryPhotos() { return (C.photos.gallery || []).filter(Boolean); }
   function galleryHTML() {
     var g = C.photos.gallery || [];
-    if (!g.length) return "";
-    return '<section class="sec" id="gallery">' +
+    var slots = Math.max(GALLERY_SLOTS, g.length), filled = 0, html = "";
+    for (var i = 0; i < slots; i++) {
+      var src = g[i], d = "--d:" + (i % 3);
+      if (src) {
+        html += '<button type="button" class="ph ph--' + (i + 1) + ' rv rv--zoom" style="' + d + '" data-idx="' + (filled++) + '" aria-label="' + esc(t("galleryTitle")) + " " + (i + 1) + '">' +
+          '<span class="ph__img"><img loading="lazy" src="' + esc(src) + '" alt=""></span></button>';
+      } else {
+        html += '<div class="ph ph--' + (i + 1) + ' ph--empty rv rv--zoom" style="' + d + '" aria-hidden="true">' +
+          '<span class="ph__img"><span class="ph__ph">' +
+          '<span class="ph__num caps">' + (ROMAN[i] || i + 1) + "</span>" +
+          '<span class="ph__mono script gold-text">' + esc(C.couple.monogram[0]) + "<i>&amp;</i>" + esc(C.couple.monogram[1]) + "</span>" +
+          '<span class="ph__soon caps">' + esc(t("photoSoon")) + "</span>" +
+          "</span></span></div>";
+      }
+    }
+    return '<section class="sec sec--pattern" id="gallery">' +
+      branchSVG("branch--br") +
+      '<p class="sec__kicker rv">' + esc(t("galleryKicker")) + "</p>" +
       '<h2 class="sec__title script gold-text rv rv--write">' + esc(t("galleryTitle")) + "</h2>" + orn() +
-      '<div class="gallery">' + g.map(function (src, i) {
-        return '<button type="button" class="rv rv--zoom" style="--d:' + (i % 3) + '" data-idx="' + i + '"><img loading="lazy" src="' + esc(src) + '" alt=""></button>';
-      }).join("") + "</div></section>";
+      '<p class="sec__lead rv">' + esc(t("galleryLead")) + "</p>" +
+      '<div class="gallery">' + html + "</div></section>";
   }
 
   function rsvpHTML() {
@@ -644,7 +666,8 @@
   /* Lightbox */
   var lbIdx = 0;
   function openLightbox(i) {
-    var g = C.photos.gallery;
+    var g = galleryPhotos();
+    if (!g.length) return;
     lbIdx = (i + g.length) % g.length;
     var lb = $("#lightbox");
     lb.querySelector("img").src = g[lbIdx];
