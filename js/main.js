@@ -136,8 +136,6 @@
   var params = new URLSearchParams(location.search);
   var guestParam = (params.get("to") || params.get("guest") || "").trim().slice(0, 80);
   var eventParam = (params.get("e") || "").trim().toLowerCase();
-  /* ?s=b → bride's family invitation: bride & her parents are listed first */
-  var brideFirst = (params.get("s") || "").toLowerCase() === "b";
 
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
 
@@ -148,12 +146,6 @@
   var reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function t(k) { return (brideFirst && STR[lang][k + "B"]) || STR[lang][k]; }
-  /* Couple names / roles in display order for this link */
-  var N1 = brideFirst ? C.couple.bride : C.couple.groom;
-  var N2 = brideFirst ? C.couple.groom : C.couple.bride;
-  var R1 = brideFirst ? "bride" : "groom";
-  var R2 = brideFirst ? "groom" : "bride";
-  var MONO = brideFirst ? [C.couple.monogram[1], C.couple.monogram[0]] : C.couple.monogram;
   function L(v) { return v && typeof v === "object" ? (v[lang] || v.vi || "") : (v || ""); }
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -167,6 +159,18 @@
   var events = C.events.filter(function (ev) { return ev.id === eventParam; });
   if (!events.length) events = C.events.slice();
   var mainEvent = events.filter(function (ev) { return !ev.tba; })[0] || events[0];
+  /* Bride's-family invitation (bride & her parents listed first):
+     ?s=b forces it, ?s=g forces groom-first, otherwise follow the event's `side`
+     when the link shows a single event (e.g. ?e=hcm). */
+  var sideParam = (params.get("s") || "").toLowerCase();
+  var brideFirst = sideParam === "b" ||
+    (sideParam !== "g" && events.length === 1 && events[0].side === "bride");
+  /* Couple names / roles in display order for this link */
+  var N1 = brideFirst ? C.couple.bride : C.couple.groom;
+  var N2 = brideFirst ? C.couple.groom : C.couple.bride;
+  var R1 = brideFirst ? "bride" : "groom";
+  var R2 = brideFirst ? "groom" : "bride";
+  var MONO = brideFirst ? [C.couple.monogram[1], C.couple.monogram[0]] : C.couple.monogram;
 
   function guestName() { return guestParam || L(C.defaultGuest); }
 

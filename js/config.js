@@ -21,11 +21,15 @@ window.WEDDING = {
      ?e=hcm shows only TP.HCM, no `e` shows all events.
      Times use Vietnam time (+07:00).
      Set `tba: true` while details are not final (card shows "updating").
+     `side: "bride"` → a link showing only this event lists the bride first
+     (override with ?s=b for bride-first or ?s=g for groom-first).
      --------------------------------------------------------------- */
   events: [
     {
       id: "hcm",
       tba: false,
+      // Hosted by the bride's family → ?e=hcm lists bride & her parents first
+      side: "bride",
       city: { vi: "TP. Hồ Chí Minh", en: "Ho Chi Minh City" },
       title: { vi: "Tiệc cưới", en: "Wedding Reception" },
       start: "2026-12-05T18:00:00+07:00",
