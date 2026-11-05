@@ -6,7 +6,7 @@ Opens with a sealed envelope → tap **Mở thiệp** → envelope opens, music 
 ## Edit content
 Everything lives in **`js/config.js`**: names, parents, events, photos, RSVP, gift box.
 
-- **TP.HCM event**: fill `start`, `end`, `lunar`, `venue`, `address`, then set `tba: false`.
+- **Events**: each has `start`, `end`, `lunar`, optional `note`, `venue`, `address`. Set `tba: true` to show "updating" instead.
 - **Photos**: copy into `assets/photos/` (JPG/WebP, ~1600px long edge, < 400 KB each), then list them in `photos.hero`, `photos.gallery`, `photos.thanks`.
 - **Music**: replace `assets/music/song.mp3` (keep the name, or change `music` in config).
 
@@ -16,6 +16,7 @@ Everything lives in **`js/config.js`**: names, parents, events, photos, RSVP, gi
 | `…/?to=Hai em Ánh Mai & các cháu` | Personal name on envelope + invitation |
 | `…/?to=…&e=hn` | Only the Hà Nội event |
 | `…/?to=…&e=hcm` | Only the TP.HCM event |
+| `…/?to=…&s=b` | Bride's-family card: bride & her parents listed first, "Lễ vu quy" wording |
 | `…/?lang=en` | Opens in English (guests can also toggle VI/EN) |
 
 Open **`make-link.html`** on your site to generate links (one by one or a whole list) and copy/share them.

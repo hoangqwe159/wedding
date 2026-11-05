@@ -24,6 +24,24 @@ window.WEDDING = {
      --------------------------------------------------------------- */
   events: [
     {
+      id: "hcm",
+      tba: false,
+      city: { vi: "TP. Hồ Chí Minh", en: "Ho Chi Minh City" },
+      title: { vi: "Tiệc cưới", en: "Wedding Reception" },
+      start: "2026-12-05T18:00:00+07:00",
+      end: "2026-12-05T21:00:00+07:00",
+      lunar: {
+        vi: "Tức ngày 27 tháng 10 năm Bính Ngọ",
+        en: "Lunar calendar: 27th day of the 10th month, Year of Bính Ngọ",
+      },
+      // Optional extra line under the date
+      note: { vi: "Đón khách 17:30 · Khai tiệc 19:00", en: "Guest welcome 17:30 · Dinner starts 19:00" },
+      venue: "Sảnh Ruby – Tầng 1 – The Adora Center",
+      address: "431 Đường Hoàng Văn Thụ, Phường Tân Sơn Nhất, TP. Hồ Chí Minh",
+      // Optional: paste a Google Maps share link. Empty = search by address.
+      mapUrl: "",
+    },
+    {
       id: "hn",
       tba: false,
       city: { vi: "Hà Nội", en: "Ha Noi" },
@@ -36,19 +54,6 @@ window.WEDDING = {
       },
       venue: "Sảnh tiệc tầng 1 – Marigold – Promes Center",
       address: "122-124 Đường Xuân Thủy, Phường Cầu Giấy, TP. Hà Nội",
-      // Optional: paste a Google Maps share link. Empty = search by address.
-      mapUrl: "",
-    },
-    {
-      id: "hcm",
-      tba: true, // ← set to false after filling in the details below
-      city: { vi: "TP. Hồ Chí Minh", en: "Ho Chi Minh City" },
-      title: { vi: "Tiệc cưới", en: "Wedding Reception" },
-      start: "2026-12-26T11:00:00+07:00", // placeholder
-      end: "2026-12-26T14:00:00+07:00",
-      lunar: { vi: "", en: "" },
-      venue: "",
-      address: "",
       mapUrl: "",
     },
   ],

@@ -371,6 +371,7 @@ html[lang="en"] .lang-toggle [data-lang="en"] { color: var(--gold-ink); font-wei
 .event__day { font-family: var(--f-caps); font-weight: 700; font-size: 24px; letter-spacing: .1em; }
 .event__long { margin: 12px 0 0; font-family: var(--f-caps); font-size: 15px; letter-spacing: .1em; color: var(--ink); }
 .event__lunar { margin: 12px 0 0; font-style: italic; font-size: 16px; color: var(--ink-soft); }
+.event__note { margin: 8px 0 0; font-family: var(--f-caps); font-size: 14px; letter-spacing: .06em; color: var(--gold-ink); }
 .event__venue { margin: 18px 0 2px; font-family: var(--f-caps); font-weight: 700; font-size: 17px; letter-spacing: .08em; color: var(--gold-ink); text-transform: uppercase; line-height: 1.4; }
 .event__addr { margin: 0; font-size: 17px; }
 .event__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }

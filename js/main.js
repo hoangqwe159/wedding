@@ -19,9 +19,11 @@
       openBtn: "Mở thiệp",
       soundHint: "Bật âm thanh để trải nghiệm trọn vẹn ♪",
       heroKicker: "Lễ thành hôn",
+      heroKickerB: "Lễ vu quy",
       scroll: "Cuộn xuống",
       inviteLabel: "Trân trọng kính mời",
       inviteText: "Tới dự bữa cơm thân mật mừng lễ thành hôn cùng gia đình chúng tôi",
+      inviteTextB: "Tới dự bữa cơm thân mật mừng lễ vu quy cùng gia đình chúng tôi",
       groomSide: "Nhà trai",
       brideSide: "Nhà gái",
       mr: "Ông",
@@ -134,6 +136,8 @@
   var params = new URLSearchParams(location.search);
   var guestParam = (params.get("to") || params.get("guest") || "").trim().slice(0, 80);
   var eventParam = (params.get("e") || "").trim().toLowerCase();
+  /* ?s=b → bride's family invitation: bride & her parents are listed first */
+  var brideFirst = (params.get("s") || "").toLowerCase() === "b";
 
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
 
@@ -143,7 +147,13 @@
   var opened = false;
   var reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function t(k) { return STR[lang][k]; }
+  function t(k) { return (brideFirst && STR[lang][k + "B"]) || STR[lang][k]; }
+  /* Couple names / roles in display order for this link */
+  var N1 = brideFirst ? C.couple.bride : C.couple.groom;
+  var N2 = brideFirst ? C.couple.groom : C.couple.bride;
+  var R1 = brideFirst ? "bride" : "groom";
+  var R2 = brideFirst ? "groom" : "bride";
+  var MONO = brideFirst ? [C.couple.monogram[1], C.couple.monogram[0]] : C.couple.monogram;
   function L(v) { return v && typeof v === "object" ? (v[lang] || v.vi || "") : (v || ""); }
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -229,7 +239,7 @@
   var crestCount = 0;
   function crestSVG() {
     var id = "cg" + (++crestCount);
-    var m = C.couple.monogram;
+    var m = MONO;
     var leaves = "";
     for (var s = -1; s <= 1; s += 2) {
       for (var k = 0; k < 8; k++) {
@@ -280,9 +290,9 @@
       '<p class="hero__kicker rv" style="--d:2">' + esc(t("heroKicker")) + "</p>" +
       (hasPhoto ? '<div class="arch rv rv--zoom" style="--d:3"><div class="arch__img"><img src="' + esc(C.photos.hero) + '" alt=""></div></div>' : "") +
       '<h1 class="hero__names script">' +
-      '<span class="gold-text rv rv--write" style="--d:3">' + esc(C.couple.groom) + "</span>" +
+      '<span class="gold-text rv rv--write" style="--d:3">' + esc(N1) + "</span>" +
       '<span class="hero__amp rv rv--fade" style="--d:8">&amp;</span>' +
-      '<span class="gold-text rv rv--write" style="--d:10">' + esc(C.couple.bride) + "</span></h1>" +
+      '<span class="gold-text rv rv--write" style="--d:10">' + esc(N2) + "</span></h1>" +
       '<div class="hero__date rv" style="--d:14"><b>' + vnParts(mainEvent.start).d + "</b><i></i><b>" +
       pad(vnParts(mainEvent.start).m) + "</b><i></i><b>" + vnParts(mainEvent.start).y + "</b></div>" +
       '<p class="hero__sub rv" style="--d:15">' + esc(L(mainEvent.city)) + "</p>" +
@@ -302,15 +312,15 @@
       '<p class="invite__label rv">' + esc(t("inviteLabel")) + "</p>" +
       '<p class="invite__guest script rv rv--write" style="--d:2">' + esc(guestName()) + "</p>" +
       '<p class="invite__text rv" style="--d:3">' + esc(t("inviteText")) + "</p>" +
-      '<p class="invite__couple script gold-text rv rv--zoom" style="--d:4">' + esc(C.couple.groom) + " &amp; " + esc(C.couple.bride) + "</p>" +
+      '<p class="invite__couple script gold-text rv rv--zoom" style="--d:4">' + esc(N1) + " &amp; " + esc(N2) + "</p>" +
       orn() +
-      '<div class="families">' + fam(t("groomSide"), f.groom, 1) + fam(t("brideSide"), f.bride, 2) + "</div>" +
+      '<div class="families">' + fam(t(R1 + "Side"), f[R1], 1) + fam(t(R2 + "Side"), f[R2], 2) + "</div>" +
       "</div></section>";
   }
 
   function eventCard(ev, i) {
     var mapUrl = ev.mapUrl || "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(ev.venue + ", " + ev.address);
-    var title = C.couple.groom + " & " + C.couple.bride + " — " + L(ev.title);
+    var title = N1 + " & " + N2 + " — " + L(ev.title);
     var gcal = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
       "&text=" + encodeURIComponent(title) +
       "&dates=" + gcalStamp(ev.start) + "/" + gcalStamp(ev.end || ev.start) +
@@ -330,6 +340,7 @@
       '<span class="event__day">' + dotDate(ev.start) + "</span></div></div>" +
       '<p class="event__long">' + esc(longDate(ev.start)) + "</p>" +
       (L(ev.lunar) ? '<p class="event__lunar">(' + esc(L(ev.lunar)) + ")</p>" : "") +
+      (ev.note && L(ev.note) ? '<p class="event__note">' + esc(L(ev.note)) + "</p>" : "") +
       '<p class="event__venue">' + esc(ev.venue) + "</p>" +
       '<p class="event__addr">' + esc(ev.address) + "</p>" +
       '<div class="event__actions">' +
@@ -431,7 +442,7 @@
       (C.photos.thanks ? '<div class="arch thanks__photo rv rv--zoom"><div class="arch__img"><img loading="lazy" src="' + esc(C.photos.thanks) + '" alt=""></div></div>' : "") +
       '<h2 class="sec__title script gold-text rv rv--write">' + esc(t("thanksTitle")) + "</h2>" +
       '<p class="thanks__text rv" style="--d:2">' + esc(t("thanksText")) + "</p>" +
-      '<p class="thanks__sig rv" style="--d:3">' + esc(t("groom")) + " <b>" + esc(C.couple.groom) + "</b> &amp; " + esc(t("bride")) + " <b>" + esc(C.couple.bride) + "</b><br>" + esc(t("withFamily")) + "</p>" +
+      '<p class="thanks__sig rv" style="--d:3">' + esc(t(R1)) + " <b>" + esc(N1) + "</b> &amp; " + esc(t(R2)) + " <b>" + esc(N2) + "</b><br>" + esc(t("withFamily")) + "</p>" +
       '<div class="crest rv rv--zoom" style="--d:4;width:96px;margin-top:30px">' + crestSVG() + "</div>" +
       '<p class="footer-note rv" style="--d:5">' + esc(t("footer")) + " · " + dotDate(mainEvent.start) + "</p>" +
       "</section>";
@@ -442,15 +453,15 @@
      ------------------------------------------------------------------ */
   function renderStatic() {
     document.documentElement.lang = lang;
-    document.title = t("docTitle") + " · " + C.couple.groom + " & " + C.couple.bride;
+    document.title = t("docTitle") + " · " + N1 + " & " + N2;
     $$("[data-i18n]").forEach(function (el) { el.textContent = t(el.getAttribute("data-i18n")); });
-    var stacked = esc(C.couple.groom) + "<br><small>&amp;</small> " + esc(C.couple.bride);
+    var stacked = esc(N1) + "<br><small>&amp;</small> " + esc(N2);
     $("#introNames").innerHTML = stacked;
     $("#miniNames").innerHTML = stacked;
     $("#introDate").textContent = dotDate(mainEvent.start);
     $("#miniDate").textContent = dotDate(mainEvent.start);
     $("#envGuest").textContent = guestName();
-    $("#sealMono").textContent = C.couple.monogram[0] + C.couple.monogram[1];
+    $("#sealMono").textContent = MONO[0] + MONO[1];
     $("#openBtn").setAttribute("aria-label", t("openBtn"));
   }
 

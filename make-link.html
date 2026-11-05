@@ -62,6 +62,13 @@
     </div>
   </div>
 
+  <div class="row">
+    <div>
+      <label for="side">Thiệp của</label>
+      <select id="side"><option value="">Nhà trai (chú rể đứng trước)</option><option value="b">Nhà gái (cô dâu đứng trước)</option></select>
+    </div>
+  </div>
+
   <div class="out" id="out"></div>
   <p class="hint">Mẹo: bấm "Chia sẻ" trên điện thoại để gửi thẳng qua Zalo / Messenger.</p>
 </main>
@@ -83,6 +90,7 @@
       if (name) q.set("to", name);
       if (ev.value) q.set("e", ev.value);
       if (document.getElementById("lang").value) q.set("lang", "en");
+      if (document.getElementById("side").value) q.set("s", "b");
       var s = q.toString();
       return base + (s ? "?" + s : "");
     }
@@ -127,7 +135,7 @@
     }
     document.getElementById("tabOne").onclick = function () { setMode("one"); };
     document.getElementById("tabMany").onclick = function () { setMode("many"); };
-    ["name", "names", "ev", "lang"].forEach(function (id) {
+    ["name", "names", "ev", "lang", "side"].forEach(function (id) {
       document.getElementById(id).addEventListener("input", render);
     });
     render();
