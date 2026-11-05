@@ -170,7 +170,7 @@
   var N2 = brideFirst ? C.couple.groom : C.couple.bride;
   var R1 = brideFirst ? "bride" : "groom";
   var R2 = brideFirst ? "groom" : "bride";
-  var MONO = brideFirst ? [C.couple.monogram[1], C.couple.monogram[0]] : C.couple.monogram;
+  var MONO = C.couple.monogram;
 
   function guestName() { return guestParam || L(C.defaultGuest); }
 
@@ -239,35 +239,63 @@
     return '<svg class="branch ' + cls + '" viewBox="-10 -10 260 150" aria-hidden="true">' + out + "</svg>";
   }
 
-  // Royal crest: crown + double ring + laurel + monogram
+  // Botanical monogram crest: leafy wreath (left → bottom), rising sprig on the right,
+  // script H / N set diagonally with a small heart (matches the printed card's logo)
   var crestCount = 0;
   function crestSVG() {
     var id = "cg" + (++crestCount);
     var m = MONO;
-    var leaves = "";
-    for (var s = -1; s <= 1; s += 2) {
-      for (var k = 0; k < 8; k++) {
-        var a = (s < 0 ? 200 - k * 14.5 : -20 + k * 14.5) * Math.PI / 180; // lower half arc
-        var cx = 100 + Math.cos(a) * 84, cy = 140 + Math.sin(a) * 84;
-        var rot = (a * 180 / Math.PI) + (s < 0 ? -55 : 55);
-        leaves += '<ellipse cx="' + f1(cx) + '" cy="' + f1(cy) + '" rx="7.5" ry="3" transform="rotate(' + f1(rot) + " " + f1(cx) + " " + f1(cy) + ')" />';
-      }
+    var CX = 100, CY = 104, R = 78;
+    function pt(deg, r) { var a = deg * Math.PI / 180; return [CX + Math.cos(a) * (r || R), CY + Math.sin(a) * (r || R)]; }
+    function leaf(x, y, rot, len) {
+      var w = len * 0.34;
+      return '<path d="M0 0C' + f1(len * .3) + " " + f1(-w) + " " + f1(len * .75) + " " + f1(-w) + " " + f1(len) + " 0C" +
+        f1(len * .75) + " " + f1(w) + " " + f1(len * .3) + " " + f1(w) + ' 0 0Z" transform="translate(' + f1(x) + " " + f1(y) + ") rotate(" + f1(rot) + ')"/>';
     }
-    return '<svg viewBox="0 0 200 236" aria-hidden="true">' +
+    function flower(x, y, r) {
+      var out = "";
+      for (var k = 0; k < 5; k++) {
+        var a = (k * 72 - 90) * Math.PI / 180;
+        out += '<circle cx="' + f1(x + Math.cos(a) * r) + '" cy="' + f1(y + Math.sin(a) * r) + '" r="' + f1(r * .72) + '"/>';
+      }
+      return out + '<circle cx="' + f1(x) + '" cy="' + f1(y) + '" r="' + f1(r * .45) + '" fill="#FFF8E6" stroke="none"/>';
+    }
+    // Main vine: from top-left (238°) around the left and bottom to lower-right (22°)
+    var a0 = 250, a1 = 22, p0 = pt(a0), p1 = pt(a1);
+    var vine = '<path d="M' + f1(p0[0]) + " " + f1(p0[1]) + "A" + R + " " + R + " 0 1 0 " + f1(p1[0]) + " " + f1(p1[1]) + '"/>';
+    // Right sprig rising from the vine's end, and a branch shooting up past the top-left
+    var sprig = '<path d="M' + f1(p1[0]) + " " + f1(p1[1]) + 'C186 120 188 96 180 62"/>' +
+      '<path d="M' + f1(p0[0]) + " " + f1(p0[1]) + 'C80 22 92 12 104 8"/>' +
+      '<path d="M' + f1(pt(214)[0]) + " " + f1(pt(214)[1]) + 'C30 46 34 34 40 26"/>';
+    var leaves = "";
+    var i = 0;
+    for (var d = a0 - 5; d > a1 + 3; d -= 7, i++) {
+      var q = pt(d), tan = d - 90;                      // direction of travel along the arc
+      var taper = Math.min(1, (a0 - d) / 40, (d - a1) / 30);
+      var len = 8 + 8 * taper;
+      var side = i % 2 ? 1 : -1;
+      leaves += leaf(q[0], q[1], tan + side * 40, len);
+      if (i % 3 === 0) leaves += leaf(q[0], q[1], tan - side * 48, len * .7);
+    }
+    // leaves on the sprigs
+    [[183, 108, -70, 13], [184, 98, -130, 11], [183, 88, -62, 12], [181, 76, -122, 10], [181, 68, -64, 8],
+     [84, 20, -100, 10], [92, 13, -10, 9], [98, 10, -95, 7],
+     [33, 40, -150, 9], [36, 32, -50, 8]].forEach(function (l) { leaves += leaf(l[0], l[1], l[2], l[3]); });
+    var flowers =
+      flower.apply(null, pt(206, R + 2).concat([4.2])) +
+      flower.apply(null, pt(158, R - 1).concat([3.6])) +
+      flower.apply(null, pt(112, R + 1).concat([4])) +
+      flower.apply(null, pt(62, R).concat([5])) + flower.apply(null, pt(52, R + 9).concat([3.4])) + flower.apply(null, pt(70, R + 10).concat([3])) +
+      flower(180, 58, 3.6) + flower(106, 8, 3) + flower(40, 24, 2.8);
+    return '<svg viewBox="0 0 200 200" aria-hidden="true">' +
       '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop offset="0" stop-color="#9C7424"/><stop offset=".45" stop-color="#F0D78A"/><stop offset=".7" stop-color="#C9A227"/><stop offset="1" stop-color="#8C6A1D"/></linearGradient></defs>' +
-      '<g transform="translate(58 4) scale(.84)" fill="url(#' + id + ')" stroke="#9A7432" stroke-width="1" stroke-linejoin="round">' +
-      '<path d="M10 54 L2 16 L28 36 L50 4 L72 36 L98 16 L90 54 Z" fill-opacity=".9"/>' +
-      '<rect x="9" y="54" width="82" height="9" rx="2"/>' +
-      '<circle cx="2" cy="14" r="4.5"/><circle cx="50" cy="3" r="5"/><circle cx="98" cy="14" r="4.5"/>' +
-      '<circle cx="30" cy="58.5" r="2" fill="#fff" stroke="none"/><circle cx="50" cy="58.5" r="2.4" fill="#fff" stroke="none"/><circle cx="70" cy="58.5" r="2" fill="#fff" stroke="none"/>' +
-      "</g>" +
-      '<circle cx="100" cy="140" r="72" fill="none" stroke="url(#' + id + ')" stroke-width="1.6"/>' +
-      '<circle cx="100" cy="140" r="66" fill="none" stroke="#C9A227" stroke-opacity=".45" stroke-width=".8"/>' +
-      '<g fill="url(#' + id + ')">' + leaves + "</g>" +
-      '<text x="64" y="156" text-anchor="middle" font-size="46" fill="url(#' + id + ')">' + esc(m[0]) + "</text>" +
-      '<text x="101" y="150" text-anchor="middle" font-size="20" fill="#B8912C">&amp;</text>' +
-      '<text x="140" y="156" text-anchor="middle" font-size="46" fill="url(#' + id + ')">' + esc(m[1]) + "</text>" +
+      '<stop offset="0" stop-color="#9C7424"/><stop offset=".45" stop-color="#E9CD7A"/><stop offset=".7" stop-color="#C9A227"/><stop offset="1" stop-color="#8C6A1D"/></linearGradient></defs>' +
+      '<g fill="none" stroke="url(#' + id + ')" stroke-width="1.6" stroke-linecap="round">' + vine + sprig + "</g>" +
+      '<g fill="url(#' + id + ')" fill-opacity=".9" stroke="#9A7432" stroke-width=".5" stroke-linejoin="round">' + leaves + "</g>" +
+      '<g fill="url(#' + id + ')" stroke="#9A7432" stroke-width=".4">' + flowers + "</g>" +
+      '<text x="82" y="108" text-anchor="middle" font-size="74" fill="url(#' + id + ')">' + esc(m[0]) + "</text>" +
+      '<text x="122" y="156" text-anchor="middle" font-size="66" fill="url(#' + id + ')">' + esc(m[1]) + "</text>" +
+      '<path d="M104 114c-2.4-3.2-7-1.4-5.6 2.1 1 2.3 5.6 5.4 5.6 5.4s4.6-3.1 5.6-5.4c1.4-3.5-3.2-5.3-5.6-2.1z" fill="#B8912C"/>' +
       "</svg>";
   }
 

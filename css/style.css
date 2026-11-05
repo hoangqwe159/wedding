@@ -302,10 +302,10 @@ html[lang="en"] .lang-toggle [data-lang="en"] { color: var(--gold-ink); font-wei
   overflow: hidden;
 }
 .hero__inner { position: relative; z-index: 1; }
-.crest { width: 128px; margin: 0 auto 10px; color: var(--gold); }
+.crest { width: 150px; margin: 0 auto 10px; color: var(--gold); }
 .crest svg { width: 100%; height: auto; overflow: visible; }
 .crest text { font-family: var(--f-script); }
-.hero--nophoto .crest { width: 168px; margin-bottom: 18px; }
+.hero--nophoto .crest { width: 200px; margin-bottom: 18px; }
 .hero__kicker { margin: 0 0 8px; font-family: var(--f-caps); font-size: 14px; letter-spacing: .36em; color: var(--gold-ink); text-transform: uppercase; }
 .hero__names { margin: 0; font-size: clamp(54px, 15vw, 72px); line-height: 1.05; }
 .hero__names span { display: block; }
