@@ -347,6 +347,8 @@ html[lang="en"] .lang-toggle [data-lang="en"] { color: var(--gold-ink); font-wei
 }
 .invite__text { margin: 14px auto 0; max-width: 32ch; font-family: var(--f-caps); font-size: 15px; letter-spacing: .08em; line-height: 1.6; text-transform: uppercase; color: var(--ink-soft); }
 .invite__couple { margin: calc(18px - .3em) 0 calc(4px - .25em); font-size: clamp(42px, 11.5vw, 54px); line-height: 1.1; }
+.invite__couple span { display: block; white-space: nowrap; }
+.invite__couple .invite__amp { font-size: .6em; line-height: 1; margin: .05em 0; }
 .families { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 26px; }
 .family h4 { margin: 0 0 6px; font-family: var(--f-caps); font-size: 15px; letter-spacing: .18em; color: var(--gold-ink); }
 .family p { margin: 0; font-size: 16.5px; font-weight: 500; line-height: 1.6; color: var(--ink); }

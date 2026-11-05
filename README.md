@@ -7,7 +7,7 @@ Opens with a sealed envelope → tap **Mở thiệp** → envelope opens, music 
 Everything lives in **`js/config.js`**: names, parents, events, photos, RSVP, gift box.
 
 - **Events**: each has `start`, `end`, `lunar`, optional `note`, `venue`, `address`. Set `tba: true` to show "updating" instead.
-- **Photos**: copy into `assets/photos/` (JPG/WebP, ~1600px long edge, < 400 KB each), then list them in `photos.hero`, `photos.gallery`, `photos.thanks`.
+- **Photos**: copy into `assets/photos/` (JPG/WebP, ~1600px long edge, < 400 KB each), then list them in `photos.hero`, `photos.gallery`, `photos.thanks`. The gallery has 6 ready-made frames (1 tall portrait, 2 squares, 1 wide landscape, 2 arched portraits); an empty `""` shows a gold "coming soon" placeholder.
 - **Music**: replace `assets/music/song.mp3` (keep the name, or change `music` in config).
 
 ## Guest links
@@ -16,7 +16,7 @@ Everything lives in **`js/config.js`**: names, parents, events, photos, RSVP, gi
 | `…/?to=Hai em Ánh Mai & các cháu` | Personal name on envelope + invitation |
 | `…/?to=…&e=hn` | Only the Hà Nội event |
 | `…/?to=…&e=hcm` | Only the TP.HCM event |
-| `…/?to=…&s=b` | Bride's-family card: bride & her parents listed first, "Lễ vu quy" wording |
+| `…/?to=…&s=b` | Bride's-family card: bride & her parents listed first (automatic for `?e=hcm`; `s=g` forces groom-first) |
 | `…/?lang=en` | Opens in English (guests can also toggle VI/EN) |
 
 Open **`make-link.html`** on your site to generate links (one by one or a whole list) and copy/share them.

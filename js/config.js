@@ -67,13 +67,20 @@ window.WEDDING = {
 
   /* ---------------------------------------------------------------
      PHOTOS — put files into assets/photos/ and list them here.
-     Leave empty and the photo sections are hidden automatically.
+     Empty hero/thanks are hidden; the gallery always shows 6 frames.
      --------------------------------------------------------------- */
   photos: {
     hero: "", // e.g. "assets/photos/hero.jpg"  (portrait works best)
+    // 6 frames in the "Khoảnh khắc" album. Empty "" = elegant placeholder.
+    // Frame layout: 1 tall portrait (left) · 2 & 3 small (right) ·
+    //               4 wide landscape · 5 & 6 arched portraits.
     gallery: [
-      // "assets/photos/01.jpg",
-      // "assets/photos/02.jpg",
+      "", // 1 · e.g. "assets/photos/01.jpg"  portrait 3:4
+      "", // 2 · square-ish
+      "", // 3 · square-ish
+      "", // 4 · landscape 3:2
+      "", // 5 · portrait (arched top)
+      "", // 6 · portrait (arched top)
     ],
     thanks: "", // optional photo above the thank-you note
   },
