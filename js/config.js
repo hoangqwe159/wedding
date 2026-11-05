@@ -70,7 +70,7 @@ window.WEDDING = {
      Empty hero/thanks are hidden; the gallery always shows 6 frames.
      --------------------------------------------------------------- */
   photos: {
-    hero: "assets/photos/hero.jpg", // portrait works best
+    hero: "", // e.g. "assets/photos/hero.jpg" (portrait works best). Empty = no photo on the first screen
     // Frames in the "Khoảnh khắc" album. Empty "" = elegant placeholder.
     // Frame layout: 1 tall portrait (left) · 2 & 3 small (right) ·
     //               4 wide landscape · 5 & 6 arched portraits · 7+ portraits in pairs.
