@@ -19,9 +19,11 @@
       openBtn: "Mở thiệp",
       soundHint: "Bật âm thanh để trải nghiệm trọn vẹn ♪",
       heroKicker: "Lễ thành hôn",
+      heroKickerB: "Lễ vu quy",   // bride's-family invite (?s=b)
       scroll: "Cuộn xuống",
       inviteLabel: "Trân trọng kính mời",
       inviteText: "Tới dự bữa cơm thân mật mừng lễ thành hôn cùng gia đình chúng tôi",
+      inviteTextB: "Tới dự bữa cơm thân mật mừng lễ vu quy cùng gia đình chúng tôi",
       groomSide: "Nhà trai",
       brideSide: "Nhà gái",
       mr: "Ông",
